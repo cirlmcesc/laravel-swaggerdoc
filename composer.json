@@ -1,0 +1,39 @@
+{
+    "name": "cirlmcesc/laravel-swaggerdoc",
+    "description": "Generating OpenAPI 3.0 document based on phpunit test for Laravel.",
+    "license": "MIT",
+    "type": "laravel-package",
+    "keywords": [
+        "laravel",
+        "swagger",
+        "phpunit",
+        "test"
+    ],
+    "authors": [
+        {
+            "name": "Cirlmcesc Ma",
+            "email": "cirlmcesc_ma@163.com"
+        }
+    ],
+    "homepage": "https://github.com/cirlmcesc/laravel-swaggerdoc",
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.2.5",
+        "zircote/swagger-php": "3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cirlmcesc\\LaravelSwaggerdoc\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cirlmcesc\\LaravelSwaggerdoc\\Providers\\LaravelSwaggerdocServiceProvider"
+            ]
+        }
+    }
+}
