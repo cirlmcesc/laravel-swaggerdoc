@@ -112,7 +112,7 @@ trait Swaggerdocable
      */
     protected function method(string $method)
     {
-        $this->request_method = $method;
+        $this->request_method = strtoupper($method);
 
         return $this;
     }
@@ -270,5 +270,17 @@ trait Swaggerdocable
     protected function basicTest(string $request_id, string $method, string $path)
     {
         return $this->operationId($request_id)->method($method)->path($path);
+    }
+
+    /**
+     * saveDocument function
+     *
+     * @return LaravelSwaggerdoc
+     */
+    protected function saveDocumentToFile(): LaravelSwaggerdoc
+    {
+        return resolve(LaravelSwaggerdoc::class)
+            ->addToPaths($this->request_path, strtolower($this->request_method), $this->api_descprition)
+            ->save();
     }
 }
