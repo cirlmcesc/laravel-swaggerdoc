@@ -3,6 +3,7 @@
 namespace Cirlmcesc\LaravelSwaggerdoc\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Cirlmcesc\LaravelSwaggerdoc\LaravelSwaggerdoc;
 
 class LaravelSwaggerdocServiceProvider extends ServiceProvider
 {
@@ -14,13 +15,28 @@ class LaravelSwaggerdocServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
+     * config file path
+     */
+    const CONFIG_PATH = __DIR__."/../../config/swaggerdoc.php";
+
+    /**
+     * route file path
+     */
+    const ROUTE_PATH = __DIR__."/../../routes/swaggerdoc.php";
+
+    /**
      * Register the service provider.
      *
      * @return void
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(self::CONFIG_PATH, "swaggerdoc");
+
+        $this->app->singleton(LaravelSwaggerdoc::class,
+            function () {
+                return new LaravelSwaggerdoc();
+            });
     }
 
     /**
@@ -30,6 +46,12 @@ class LaravelSwaggerdocServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        if ($this->app->runningInConsole()) {
+            $this->commands([\Cirlmcesc\LaravelSwaggerdoc\Commands\InstallCommand::class]);
+        }
+
+        $this->publishes([self::CONFIG_PATH => config_path("swaggerdoc.php")], "swaggerdoc-config");
+
+        $this->loadRoutesFrom(self::ROUTE_PATH);
     }
 }
