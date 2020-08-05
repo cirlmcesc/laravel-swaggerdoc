@@ -91,7 +91,7 @@ class LaravelSwaggerdoc
      */
     public function addToPaths(string $path, string $method, array $data): self
     {
-        data_set($this->documentation_data, "paths.{$path}.{$method}", $data);
+        $this->documentation_data = data_set($this->documentation_data, "paths.{$path}.{$method}", $data);
 
         return $this;
     }

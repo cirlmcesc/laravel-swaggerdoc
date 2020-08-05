@@ -203,7 +203,7 @@ trait Swaggerdocable
             }
         }
 
-        data_set($this->api_descprition,
+        $this->api_test_data = data_set($this->api_descprition,
             "requestBody.content.application/json",
             [
                 'schema' => [
@@ -234,7 +234,7 @@ trait Swaggerdocable
 
         $this->api_descprition['responses'] = config("swaggerdoc.standar_response");
 
-        data_set($this->api_descprition,
+        $this->api_descprition = data_set($this->api_descprition,
             "responses.200.content.application/json.examples.successful.value",
             $response->json());
 
