@@ -25,6 +25,11 @@ class LaravelSwaggerdocServiceProvider extends ServiceProvider
     const ROUTE_PATH = __DIR__."/../../routes/swaggerdoc.php";
 
     /**
+     * view file path
+     */
+    const VIEW_PATH = __DIR__."/../../views";
+
+    /**
      * Register the service provider.
      *
      * @return void
@@ -53,5 +58,11 @@ class LaravelSwaggerdocServiceProvider extends ServiceProvider
         $this->publishes([self::CONFIG_PATH => config_path("swaggerdoc.php")], "swaggerdoc-config");
 
         $this->loadRoutesFrom(self::ROUTE_PATH);
+
+        $this->loadViewsFrom(self::VIEW_PATH, 'swaggerdoc');
+
+        $this->publishes([
+            __DIR__ . '/../../resources/assets' => public_path("vendor/swaggerdoc"),
+        ], "swaggerdoc-resources");
     }
 }

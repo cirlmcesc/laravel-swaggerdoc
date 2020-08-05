@@ -41,5 +41,10 @@ class InstallCommand extends Command
             "--tag" => "swaggerdoc-config",
             "--force",
         ]);
+
+        $this->call('vendor:publish', [
+            "--tag" => "swaggerdoc-resources",
+            "--force",
+        ]);
     }
 }
