@@ -32,8 +32,8 @@ class LaravelSwaggerdoc
     {
         $json_file_path = config('swaggerdoc.json_path', 'documentation/api-docs.json');
 
-        return file_exists($json_file_path) == true
-            ? json_decode(file_get_contents(storage_path($json_file_path)), true)
+        return Storage::exists($json_file_path) == true
+            ? json_decode(Storage::get($json_file_path), true)
             : config('swaggerdoc.structure');
     }
 
