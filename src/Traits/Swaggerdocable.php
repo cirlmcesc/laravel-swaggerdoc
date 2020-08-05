@@ -188,12 +188,18 @@ trait Swaggerdocable
                 'description' => $value['description'],
             ];
 
-            if ($value['type'] == 'array') {
+            if (isset($value['type']) && $value['type'] == 'array') {
                 $properties[$attribute]['items'] = $value['items'];
             }
 
-            if ($value['is_required'] == true) {
+            if (isset($value['is_required']) && $value['is_required'] == true) {
                 $required[] = $attribute;
+            }
+
+            if (isset($value['example'])) {
+                $example_data[$attribute] = $value['example'];
+
+                $this->api_test_data[$attribute] = $value['example'];
             }
         }
 
@@ -222,15 +228,28 @@ trait Swaggerdocable
      */
     protected function assertStandardResponse(TestResponse $response, array $description)
     {
+        $this->listenResponse($response);
+
         $response->assertSuccessful();
 
         $this->api_descprition['responses'] = config("swaggerdoc.standar_response");
 
         data_set($this->api_descprition,
             "responses.200.content.application/json.examples.successful.value",
-            $response->data);
+            $response->json());
 
         return $this;
+    }
+
+    /**
+     * listenResponse function
+     *
+     * @param TestResponse $response
+     * @return void
+     */
+    protected function listenResponse(TestResponse $response): void
+    {
+        //
     }
 
     /**

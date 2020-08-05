@@ -19,8 +19,11 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.2.5",
+        "laravel/framework": "^7.0",
         "zircote/swagger-php": "3.*",
-        "symfony/yaml": ">=3.3"
+        "swagger-api/swagger-ui": "^3.0",
+        "symfony/yaml": ">=3.3",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

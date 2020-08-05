@@ -14,22 +14,39 @@ return [
 
     'auto_regist_route' => true,
 
-    'auto_regist_route_path' => "",
+    'paths' => [
 
-    'auto_regist_middlewares' => [],
+        'data' => [
 
+            'path' => '/swaggerdoc/data',
+
+            'middlewares' => []
+
+        ],
+
+        'view' => [
+
+            'path' => '/swaggerdoc',
+
+            'middlewares' => [],
+
+        ],
+
+    ],
 
     /*
     |--------------------------------------------------------------------------
-    | Set json file path
+    | Set file path
     |--------------------------------------------------------------------------
     |
-    | Here you need to set the path of json file.
+    | Here you need to set the path of file.
     | Output or read will read the corresponding file.
     |
     */
 
-    'json_path' => storage_path('documentation/api-docs.json'),
+    'json_path' => 'documentation/api-docs.json',
+
+    'yaml_path' => 'documentation/api-docs.yaml',
 
 
     /*

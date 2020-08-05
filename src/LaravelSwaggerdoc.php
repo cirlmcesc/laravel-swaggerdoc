@@ -2,6 +2,7 @@
 
 namespace Cirlmcesc\LaravelSwaggerdoc;
 
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
@@ -29,7 +30,7 @@ class LaravelSwaggerdoc
      */
     public function readJsonFile(): array
     {
-        $json_file_path = config('swaggerdoc.json_path', storage_path('documentation/api-docs.json'));
+        $json_file_path = config('swaggerdoc.json_path', 'documentation/api-docs.json');
 
         return file_exists($json_file_path) == true
             ? json_decode(file_get_contents($json_file_path), true)
@@ -44,8 +45,8 @@ class LaravelSwaggerdoc
      */
     public function writeJsonFile(array $json): self
     {
-        file_put_contents(
-            config('swaggerdoc.json_path', storage_path('documentation/api-docs.json')),
+        Storage::prepend(
+            config('swaggerdoc.json_path', 'documentation/api-docs.json'),
             json_encode($json));
 
         return $this;
@@ -60,7 +61,7 @@ class LaravelSwaggerdoc
     {
         try {
             return Yaml::parse(file_get_contents(
-                config('swaggerdoc.yaml_path', storage_path('documentation/api-docs.yaml'))));
+                config('swaggerdoc.yaml_path', 'documentation/api-docs.yaml')));
         } catch (ParseException $e) {
             return config('swaggerdoc.structure');
         }
@@ -74,8 +75,8 @@ class LaravelSwaggerdoc
      */
     public function writeYamlFile(array $json): self
     {
-        file_put_contents(
-            config('swaggerdoc.yaml_path', storage_path('documentation/api-docs.yaml')),
+        Storage::prepend(
+            config('swaggerdoc.yaml_path', 'documentation/api-docs.yaml'),
             Yaml::dump($json));
 
         return $this;
