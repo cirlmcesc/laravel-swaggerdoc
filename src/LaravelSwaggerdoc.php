@@ -45,9 +45,9 @@ class LaravelSwaggerdoc
      */
     public function writeJsonFile(array $json): self
     {
-        Storage::prepend(
-            config('swaggerdoc.json_path', 'documentation/api-docs.json'),
-            json_encode($json));
+        Storage::delete(config('swaggerdoc.json_path', 'documentation/api-docs.json'));
+
+        Storage::prepend(config('swaggerdoc.json_path', 'documentation/api-docs.json'), json_encode($json));
 
         return $this;
     }
@@ -75,9 +75,9 @@ class LaravelSwaggerdoc
      */
     public function writeYamlFile(array $json): self
     {
-        Storage::prepend(
-            config('swaggerdoc.yaml_path', 'documentation/api-docs.yaml'),
-            Yaml::dump($json));
+        Storage::delete(config('swaggerdoc.yaml_path', 'documentation/api-docs.yaml'));
+
+        Storage::prepend(config('swaggerdoc.yaml_path', 'documentation/api-docs.yaml'), Yaml::dump($json));
 
         return $this;
     }
