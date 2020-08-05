@@ -102,7 +102,7 @@ return [
 
             'description' => "这是关于 this project 的 API 文档",
 
-            'contact' => '',
+            'contact' => [],
 
             'license' => [
 
