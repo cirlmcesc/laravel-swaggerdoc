@@ -4,6 +4,9 @@ namespace Cirlmcesc\LaravelSwaggerdoc\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Cirlmcesc\LaravelSwaggerdoc\LaravelSwaggerdoc;
+use Cirlmcesc\LaravelSwaggerdoc\Commands\InstallCommand;
+use Cirlmcesc\LaravelSwaggerdoc\Commands\GenerateCommand;
+use Cirlmcesc\LaravelSwaggerdoc\Commands\MakeCommand;
 
 class LaravelSwaggerdocServiceProvider extends ServiceProvider
 {
@@ -15,33 +18,19 @@ class LaravelSwaggerdocServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
-     * config file path
-     */
-    const CONFIG_PATH = __DIR__."/../../config/swaggerdoc.php";
-
-    /**
-     * route file path
-     */
-    const ROUTE_PATH = __DIR__."/../../routes/swaggerdoc.php";
-
-    /**
-     * view file path
-     */
-    const VIEW_PATH = __DIR__."/../../views";
-
-    /**
      * Register the service provider.
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->mergeConfigFrom(self::CONFIG_PATH, "swaggerdoc");
+        /** Merge Settings */
+        $this->mergeConfigFrom(__DIR__."/../../config/swaggerdoc.php", "swaggerdoc");
 
-        $this->app->singleton(LaravelSwaggerdoc::class,
-            function () {
-                return new LaravelSwaggerdoc();
-            });
+        /** Registering singleton LaravelSwaggerdoc objects */
+        if ($this->app->environment('local')) {
+            $this->app->singleton(LaravelSwaggerdoc::class, fn() => new LaravelSwaggerdoc());
+        }
     }
 
     /**
@@ -49,20 +38,83 @@ class LaravelSwaggerdocServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([\Cirlmcesc\LaravelSwaggerdoc\Commands\InstallCommand::class]);
+        $this
+            ->registerCommandInConsole()
+            ->publishesResources()
+            ->loadResources()
+            ->setFilesystemDisk();
+    }
+
+    /**
+     * Registering commands in the command line runtime environment
+     *
+     * @return self
+     */
+    private function registerCommandInConsole(): self
+    {
+        if ($this->app->runningInConsole() == true) {
+            $this->commands([
+                InstallCommand::class, 
+                GenerateCommand::class,
+                MakeCommand::class,
+            ]);
         }
 
-        $this->publishes([self::CONFIG_PATH => config_path("swaggerdoc.php")], "swaggerdoc-config");
+        return $this;
+    }
 
-        $this->loadRoutesFrom(self::ROUTE_PATH);
+    /**
+     * load resources function
+     *
+     * @return self
+     */
+    private function loadResources(): self
+    {
+        // $this->loadRoutesFrom(self::ROUTE_PATH);
 
-        $this->loadViewsFrom(self::VIEW_PATH, 'swaggerdoc');
+        // $this->loadViewsFrom(self::VIEW_PATH, 'swaggerdoc');
 
-        $this->publishes([
-            __DIR__ . '/../../resources/assets' => public_path("vendor/swaggerdoc"),
-        ], "swaggerdoc-resources");
+        $this->loadTranslationsFrom(__DIR__."/../../lang", "swaggerdoc");
+
+        return $this;
+    }
+
+    /**
+     * publishes resources function
+     *
+     * @return self
+     */
+    private function publishesResources(): self
+    {
+        // const ROUTE_PATH = __DIR__."/../../routes/swaggerdoc.php";
+        // const VIEW_PATH = __DIR__."/../../views";
+
+        // $this->publishes([self::CONFIG_PATH => config_path("swaggerdoc.php")], "swaggerdoc-config");
+
+        // $this->publishes([
+        //     __DIR__ . '/../../resources/assets' => public_path("vendor/swaggerdoc"),
+        // ], "swaggerdoc-resources");
+
+        return $this;
+    }
+
+    /**
+     * set filesystem disk
+     *
+     * @return self
+     */
+    private function setFilesystemDisk(): self
+    {
+        config([
+            'filesystems.disks.swaggerdoc' => [
+                'driver' => 'local',
+                'root' => base_path(),
+                'throw' => false,
+            ],
+        ]);
+
+        return $this;
     }
 }
